@@ -1,0 +1,235 @@
+#RB1
+enable
+configure terminal
+clock set 07:00:00 28 jun 2023
+hostname RB1
+line console 0
+password consola
+login
+exit
+enable secret password cisco
+exit 
+line vty 0 15
+password cisco
+login
+end
+Desciption CXRB1L1
+interface fasthethernet 0/0
+ip address 114.10.4.1 255.255.254.0
+no shutdown
+exit
+Desciption CXRB1RA1
+interface serial 0/0
+ip address 22.0.0.2 255.255.255.252
+no shutdown
+exit
+
+router rip
+version 2
+no auto-summary
+network 114.10.4.0
+network 22.0.0.0
+do copy run st
+
+
+----------------------------------
+
+#RA1
+enable
+configure terminal
+clock set 07:00:00 28 jun 2023
+hostname RA1
+line console 0
+password consola
+login
+exit
+enable secret password cisco
+exit 
+line vty 0 15
+password cisco
+login
+end
+Desciption CXRA1L1
+interface fasthethernet 0/0
+ip address 115.40.0.1 255.255.255.0
+no shutdown
+exit
+Desciption CXRB1RA1
+interface serial 0/1
+ip address 22.0.0.1 255.255.255.252
+no shutdown
+exit
+Desciption CXRA1RA2
+interface serial 0/0
+ip address 44.0.0.2 255.255.255.252
+no shutdown
+exit
+do copy run st
+
+router rip
+version 2
+no auto-summary
+network 115.40.0.0
+network 22.0.0.0
+network 44.0.0.0
+do copy run st
+----------------------------------------
+
+#RA2
+enable
+configure terminal
+clock set 07:00:00 28 jun 2023
+hostname RA2
+line console 0
+password consola
+login
+exit
+enable secret password cisco
+exit 
+line vty 0 15
+password cisco
+login
+end
+Desciption CXRA1S1
+interface fasthethernet 0/0
+ip address 195.172.0.1 255.255.255.192
+no shutdown
+exit
+Desciption CXRA2RA1
+interface serial 0/1
+ip address 44.0.0.1 255.255.255.252
+no shutdown
+exit
+Desciption CXRA2RA3
+interface serial 0/0
+ip address 9.0.0.2 255.255.255.252
+no shutdown
+exit
+
+
+router ospf 1
+router id 4.4.4.4
+network 9.0.0.0 0.0.0.3 area 0
+network 195.172.0.0 0.0.0.192 area 0
+redistribute rip subnets
+
+router rip 
+version 2
+network 44.0.0.0
+resdistribute ospf 1
+
+do copy run st
+----------------------------------------
+
+#RA3
+enable
+configure terminal
+clock set 07:00:00 28 jun 2023
+hostname RA3
+line console 0
+password consola
+login
+exit
+enable secret password cisco
+exit 
+line vty 0 15
+password cisco
+login
+end
+Desciption CXRA3RA2
+interface serial 0/1
+ip address 9.0.0.1 255.255.255.252
+no shutdown
+exit
+Desciption CXRA3RA4
+interface serial 0/0
+ip address 55.0.0.2 255.255.255.252
+no shutdown
+exit
+
+
+router ospf 1
+router id 3.3.3.3
+network 9.0.0.0 0.0.0.3 area 0
+network 55.0.0.0 0.0.0.3 area 0
+do copy run st
+----------------------------------------
+
+#RA4
+enable
+configure terminal
+clock set 07:00:00 28 jun 2023
+hostname RA4
+line console 0
+password consola
+login
+exit
+enable secret password cisco
+exit 
+line vty 0 15
+password cisco
+login
+end
+Desciption CXRA4RA3
+interface serial 0/1
+ip address 55.0.0.1 255.255.255.252
+no shutdown
+exit
+Desciption CXRA4RB2
+interface serial 0/0
+ip address 33.0.0.2 255.255.255.252
+no shutdown
+exit
+
+
+router ospf 1
+router id 2.2.2.2
+network 9.0.0.0 0.0.0.3 area 0
+network 33.0.0.0 0.0.0.3 area 0
+do copy run st
+----------------------------------------
+
+#RB2
+enable
+configure terminal
+clock set 07:00:00 28 jun 2023
+hostname RA2
+line console 0
+password consola
+login
+exit
+enable secret password cisco
+exit 
+line vty 0 15
+password cisco
+login
+end
+Desciption CXRB2L1
+interface fasthethernet 0/0
+ip address 165.10.0.0 255.255.252.0
+no shutdown
+exit
+Desciption CXRB2RA4
+interface serial 0/0
+ip address 33.0.0.1 255.255.255.252
+no shutdown
+exit
+router ospf 1
+router id 1.1.1.1
+network 165.10.0.0 0.0.252.255 area 0
+network 33.0.0.0 0.0.0.3 area 0
+do copy run st
+
+
+AS30 LAPTOP 1
+165.10.0.2 255.255.252.0
+
+AS20 SERVIDOR 1
+195.172.0.2  255.255.255.192
+
+AS10 LAN 1 LAPTOP 1
+114.10.4.2 255.255.252.0
+
+AS10 LAN 2 LAPTOP 1
+115.40.0.2 255.255.255.0
+
